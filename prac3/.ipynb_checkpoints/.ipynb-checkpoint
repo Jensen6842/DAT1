@@ -1,0 +1,819 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "t21A_LdjaSZA"
+   },
+   "source": [
+    "# DATA 1 Practical 3 - Questions\n",
+    "\n",
+    "Simos Gerasimou\n",
+    "\n",
+    "\n",
+    "## Wine Exploration"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "mkoefaAPaSZK"
+   },
+   "source": [
+    "**WineEnthusiast** is a website for buying wine products and in which customers can also review products. The company has collected reviews for a wide variety of their products on November 22nd, 2017. The company wants to analyse this data to extract insights from its products and answer questions including:\n",
+    "* how its products are rated by customers?\n",
+    "* are there patterns that might increase its revenue and/or profit?\n",
+    "\n",
+    "#### Your tasks are to explore this dataset and generade actionable knowledge. \n",
+    "\n",
+    "\n",
+    "This Jupyter Notebook will be presented to the WineEnthusiast main stakeholders who have limited knowledge about data science. Your findings should be complemented by a suitable justification explaining what you observe and, when applicable, what this observation means and, possibly, why it occurs.\n",
+    "\n",
+    "\n",
+    "***"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "tadicbCfdZoi"
+   },
+   "source": [
+    "### **Important Information**\n",
+    "\n",
+    "(1) To answer these exercises, you **must first read Chapter 2: Introduction to NumPy from the Python Data Science Handbook** (https://jakevdp.github.io/PythonDataScienceHandbook/02.00-introduction-to-numpy.html)\n",
+    "\n",
+    "\n",
+    "(2) For each question (task) a description is provided accompanied (most of the time) by two cells: one for writing the Python code and another for providing the justification. Feel free to add more cells if you feel they are needed, but keep the cells corresponding to the same question close by.\n",
+    "\n",
+    "**Hint**: If you find difficulties in solving a task, look at Chapter 2 from the Python Data Science Handbook.\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "NknUE6umgA8t"
+   },
+   "source": [
+    "#### **T1) Explore the dataset and for each column write its name, data type (categorical/numerical - nominal,ordinal,discrete,continuous) and its meaning (i.e., what does it capture?)**\n",
+    "\n",
+    "* You may want to open the CSV file using a text editor (e.g., Notepad) or a spreadsheet editor (e.g., Excel)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "h4tiYhy5gF_6"
+   },
+   "source": [
+    "**Write your answer here**\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "ltW7YyZ7g7DG"
+   },
+   "source": [
+    "### 1) Reading dataset\n",
+    "\n",
+    "The classic cars dataset is available on VLE (look for \"wine-data-filtered-500.csv\" in the Practicals section)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "id": "Eef1smmDf6sT"
+   },
+   "outputs": [],
+   "source": [
+    "#Using NumPy to read the dataset\n",
+    "import numpy as np\n",
+    "#Define the path to the dataset\n",
+    "data_path = \"wine-data-filtered-500.csv\"\n",
+    "#Define the type of each dataset column. \n",
+    "#This is needed because NumPy arrays cannot directly read files with different data types\n",
+    "#Hence, we are using Structured arrays. \n",
+    "#But, we will soon move to Pandas which makes data manipulation easier\n",
+    "types = ['i4', 'U30', 'i4', 'i4', 'U50', 'U50', 'U100', 'U100', 'U100']\n",
+    "#Read the dataset\n",
+    "data = np.genfromtxt(data_path, dtype=types, delimiter=',', names=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "Doh4SF003--5"
+   },
+   "source": [
+    "##### **Since we are using Structured Arrays, we can extract the entries of a column by specifying its name. We can further slice the array by using the standard [Python slicing mechanism](https://www.w3schools.com/python/numpy_array_slicing.asp)**\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "id": "H3aA0ZsI4MUC"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[(1, 'Portugal', 87, 15, 'Douro', 'Roger Voss', 'Quinta dos Avidagos 2011 Avidagos Red (Douro)', 'Portuguese Red', 'Quinta dos Avidagos')\n",
+      " (2, 'US', 87, 14, 'Oregon', 'Paul Gregutt', 'Rainstorm 2013 Pinot Gris (Willamette Valley)', 'Pinot Gris', 'Rainstorm')\n",
+      " (3, 'US', 87, 13, 'Michigan', 'Alexander Peartree', 'St. Julian 2013 Reserve Late Harvest Riesling (Lake Michigan Shore)', 'Riesling', 'St. Julian')\n",
+      " (4, 'US', 87, 65, 'Oregon', 'Paul Gregutt', \"Sweet Cheeks 2012 Vintner's Reserve Wild Child Block Pinot Noir (Willamette Valley)\", 'Pinot Noir', 'Sweet Cheeks')\n",
+      " (5, 'Spain', 87, 15, 'Northern Spain', 'Michael Schachner', 'Tandem 2011 Ars In Vitro Tempranillo-Merlot (Navarra)', 'Tempranillo-Merlot', 'Tandem')]\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Print the first 5 entries with \n",
+    "print(data[0:5])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "id": "JYceY6Zz4-ui"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['Quinta dos Avidagos 2011 Avidagos Red (Douro)'\n",
+      " 'Rainstorm 2013 Pinot Gris (Willamette Valley)'\n",
+      " 'St. Julian 2013 Reserve Late Harvest Riesling (Lake Michigan Shore)'\n",
+      " \"Sweet Cheeks 2012 Vintner's Reserve Wild Child Block Pinot Noir (Willamette Valley)\"\n",
+      " 'Tandem 2011 Ars In Vitro Tempranillo-Merlot (Navarra)'\n",
+      " 'Terre di Giurfo 2013 Belsito Frappato (Vittoria)'\n",
+      " 'Trimbach 2012 Gewurztraminer (Alsace)'\n",
+      " 'Heinz Eifel 2013 Shine Gewurztraminer (Rheinhessen)'\n",
+      " 'Jean-Baptiste Adam 2012 Les Natures Pinot Gris (Alsace)'\n",
+      " 'Kirkland Signature 2011 Mountain Cuvee Cabernet Sauvignon (Napa Valley)']\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Print the first ten wine titles\n",
+    "print(data['title'][0:10])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "6YU2QMmJ65YJ"
+   },
+   "source": [
+    "***\n",
+    "### **How do the wine prices look like?**\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "o7LrmCWM6P2c"
+   },
+   "source": [
+    "#### **T2) Calculate the mean and median prices for all the wines**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {
+    "id": "PVvVfMa_08Ds"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "42.428\n",
+      "30.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(np.mean(data['price']))\n",
+    "print(np.median(data['price']))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "KWIQWq7C1W3C"
+   },
+   "source": [
+    "#### **T3) Calculate the min, max, range and standard deviation of wine prices**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {
+    "id": "9lMEnZ6M08HK"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "7\n",
+      "775\n",
+      "768\n",
+      "60.51959034891099\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(np.min(data['price']))\n",
+    "print(np.max(data['price']))\n",
+    "print(np.ptp(data['price']))\n",
+    "print(np.std(data['price']))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "-Haj6qSO7J5k"
+   },
+   "source": [
+    "#### **T4) What insights can you extract from these values? Which metric of central tendency should we use?**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "WXbnryk57Pel"
+   },
+   "source": [
+    "Use the median as there is clearly more cheaper wines than expensive ones."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "79i7K__v7obW"
+   },
+   "source": [
+    "***\n",
+    "### **What do the reviewers think about the quality of wines?**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "D36aM_u38fea"
+   },
+   "source": [
+    "#### **T5) Calculate the metrics of central tendency for wine ratings (points)**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {
+    "id": "AXCDKAHX8jII"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "89.244\n",
+      "89.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(np.mean(data['points']))\n",
+    "print(np.median(data['points']))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "nCYOYEgW7q2y"
+   },
+   "source": [
+    "#### **T6) Calculate the metrics of dispersion for wine ratings (points)**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {
+    "id": "833qUWEW08Aw"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "80\n",
+      "100\n",
+      "20\n",
+      "2.8107764051948347\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(np.min(data['points']))\n",
+    "print(np.max(data['points']))\n",
+    "print(np.ptp(data['points']))\n",
+    "print(np.std(data['points']))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "JrOXzTTZ-gUv"
+   },
+   "source": [
+    "#### **T7) Calculate the interquartile range for the ratings of all reviewed wines**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {
+    "id": "21dB_vAc072q"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "4.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(np.percentile(data['points'], 75)-np.percentile(data['points'], 25))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "ZU_HXIT59RBw"
+   },
+   "source": [
+    "#### **T8) What insights can you extract from these values? Which metric of central tendency should we use?**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "8Twk9Ekv9Ydl"
+   },
+   "source": [
+    "Use both mean and median as they are very close, this is supported by the std and iqr."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "SdJjdphs_AWV"
+   },
+   "source": [
+    "### **Further Analysis**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "FNKoHVB_OsxE"
+   },
+   "source": [
+    "#### **T9) How many wine varieties have been reviewed?**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {
+    "id": "gHowQsinO2pk"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "91\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(len(np.unique(data['variety'])))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "B9oenbXKP9nO"
+   },
+   "source": [
+    "#### **T10) Which is the most reviewed wine variety and what is its mean rating?**\n",
+    "\n",
+    "* Hint: Check the section on array masking from the NumPy chapter in the Python Data Science Handbook"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {
+    "id": "cFDCtL2wP7KC"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Pinot Noir 89.87272727272727\n"
+     ]
+    }
+   ],
+   "source": [
+    "varieties, num = np.unique(data['variety'], return_counts=True)\n",
+    "mostReviewedVariety = varieties[np.argmax(num)]\n",
+    "mostReviewedVarietyRatings=data[data['variety']==mostReviewedVariety]\n",
+    "meanRating = np.mean(mostReviewedVarietyRatings['points'])\n",
+    "print(mostReviewedVariety, meanRating)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "wCceOD-U_WRw"
+   },
+   "source": [
+    "#### **T11) Which are the most widely reviewed wineries? How many reviews did each receive?**\n",
+    "\n",
+    "* Hint: Check the section on array masking from the NumPy chapter in the Python Data Science Handbook\n",
+    "* Hint: Another option is to use the function argwhere function from NumPy (https://numpy.org/doc/stable/reference/generated/numpy.argwhere.html)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {
+    "id": "11w1mbl3_br6"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The most reviewed wineries are ['Cono Sur' 'Le Cadeau'] and have received 4 reviews each\n"
+     ]
+    }
+   ],
+   "source": [
+    "wineries, reviews = np.unique(data['winery'], return_counts = True)\n",
+    "maxReviews = np.max(reviews)\n",
+    "maxReviewedWineries = wineries[reviews==maxReviews]\n",
+    "print(\"The most reviewed wineries are %s and have received %d reviews each\" % (maxReviewedWineries, maxReviews))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "FM8dusJlG-6N"
+   },
+   "source": [
+    "#### **T12) Which reviewed wines are white?**\n",
+    "\n",
+    "* Hint: Which variable of a wine may contain this information?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {
+    "id": "ittlcdYmJVwF"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['Baglio di Pianetto 2007 Ficiligno White (Sicilia)', 'Stemmari 2013 Dalila White (Terre Siciliane)', 'Marchesi Antinori 2015 Villa Antinori White (Toscana)', 'Poggioventoso 2015 Poetico White (Toscana)', 'Herdade Grande 2014 Geracoes Colheita Seleccionada Branco White (Alentejano)', 'Terlan 2014 Nova Domus Riserva White (Alto Adige)', 'Delaire Graff 2013 Reserve White (Coastal Region)', 'Buried Cane 2009 Whiteline No Oak Chardonnay (Columbia Valley (WA))', 'Domaine Sigalas 2010 Asirtiko Athiri White (Santorini)', 'La Vis 2001 Bianco dei Sorni White (Trentino)', 'Cantina Terlano 2002 Terlano Classico White (Alto Adige)', 'Las Positas 2014 Verdigris White (California)', 'Andre Brunel 2014 Domaine de la Becassonne White (Cotes du Rhone)', 'Terre Rouge 2014 Enigma White (Sierra Foothills)', 'Raconteur 2016 White (Washington)', 'Quinta do Portal 2012 Verdelho and Sauvignon Blanc White (Douro)', 'Solar de Pinheiro 2012 Paco de Sao Lourenco White (Vinho Verde)', 'Biecher & Schaal 2014 Altenberg de Bergheim Grand Cru White (Alsace)']\n"
+     ]
+    }
+   ],
+   "source": [
+    "titles = data['title'].tolist()\n",
+    "whiteWines = []\n",
+    "for i in titles:\n",
+    "    if \"WHITE\" in i.upper():\n",
+    "        whiteWines.append(i)\n",
+    "print(whiteWines)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "vhFGTlMUSdNO"
+   },
+   "source": [
+    "#### **T13) How many tasters (sommelliers) have reviewed wines produced by the \"Winzer Krems\" winery?**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {
+    "id": "ulEdXd5QTAWp"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "2 sommelliers have reviewed wines producted by Winzer Krems\n"
+     ]
+    }
+   ],
+   "source": [
+    "winesWK = data[data['winery'] == \"Winzer Krems\"]\n",
+    "tasters = np.unique(winesWK['tasterName'])\n",
+    "print(\"%d sommelliers have reviewed wines producted by Winzer Krems\" % (len(tasters)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "fA5ktY4QV7Gw"
+   },
+   "source": [
+    "#### **T14) What can you infer about the ratings given by the sommelliers for wines produced by \"Le Cadeau\"? How much confidence would you have about these reviews?**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "qoqMMwpOWKAi"
+   },
+   "source": [
+    "The same score of 91 has been given to all wines by the same taster so it is not very trustful."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "sdW1jRS0d1QR"
+   },
+   "source": [
+    "#### **T15) Which country's the wines have received the most reviews with rating above 95? How much do these wines cost on average?**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "id": "PA17biP9g9zZ"
+   },
+   "outputs": [],
+   "source": [
+    "wineRatingsOver95 = data[(data['points'] > 95)]\n",
+    "countries, counts = np.unique(wineRatingsOver95['country'], return_counts=True)\n",
+    "indexWithMostReviews = np.argmax(counts)\n",
+    "\n",
+    "countrywithMostReviewsOver95 = countries[indexWithMostReviews]\n",
+    "winesPrice = wineRatingsOver95[wineRatingsOver95['country']==countrywithMostReviewsOver95]['price']\n",
+    "avgWinesPrice = np.mean(winesPrice)\n",
+    "\n",
+    "print (\"%s is the country whose wines received the most ratings above 95. These wines cost %.2f\" \n",
+    "       % (countrywithMostReviewsOver95, avgWinesPrice))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "rfZLlqomjAck"
+   },
+   "source": [
+    "#### **T16) What is the name (title) of the wine with the highest score? Are there other wines that cost as much as the wine with the highest score? If so, give their names (titles).**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {
+    "id": "Wl3UTmHdjS3C"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The wine(s) with the highest score(s): ['Chambers Rosewood Vineyards NV Rare Muscat (Rutherglen)']\n"
+     ]
+    }
+   ],
+   "source": [
+    "bestWine = data[data['points'] == 100]\n",
+    "print(\"The wine(s) with the highest score(s):\", bestWine['title'])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "2Vzt5mDLka90"
+   },
+   "source": [
+    "#### **T17) How many wines from Italy have a rating above the 90th percentile and from which province do the wines come from?**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "id": "o7P9Yg47kd_r"
+   },
+   "outputs": [],
+   "source": [
+    "winesItalyAbove90P = data[(data['points'] > np.percentile(data['points'], 90)) & (data['country']==\"Italy\")]\n",
+    "italianProvinces = winesItalyAbove90P['province']\n",
+    "\n",
+    "print (\"There are %d Italian wines whose rating is above the 90th percentile and they come from %s\" % (len(winesItalyAbove90P), np.unique(italianProvinces)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "WDiGs2z5mbBq"
+   },
+   "source": [
+    "#### **T18) What is the average rating given by each sommellier?**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {
+    "id": "96LQl3fbmrwh"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The sommeliers have given the following average ratings [('Alexander Peartree', 87.0), ('Anna Lee C. Iijima', 89.83333333333333), ('Anne Krebiehl', 89.63157894736842), ('Jeff Jenssen', 93.0), ('Jim Gordon', 90.0), ('Joe Czerwinski', 90.44117647058823), ('Kerin O Keefe', 89.27272727272727), ('Lauren Buzzeo', 88.85714285714286), ('Matt Kettmann', 90.36363636363636), ('Michael Schachner', 87.56756756756756), ('Mike DeSimone', 90.0), ('Paul Gregutt', 89.05882352941177), ('Roger Voss', 89.27397260273973), ('Sean P. Sullivan', 88.80555555555556), ('Susan Kostrzewa', 86.375), ('Virginie Boone', 89.87142857142857)]\n"
+     ]
+    }
+   ],
+   "source": [
+    "sommeliers = np.unique(data['tasterName'])\n",
+    "\n",
+    "avgRatingBySom = [(som, np.mean(data[data['tasterName']==som]['points'])) for som in sommeliers]\n",
+    "\n",
+    "avgRatingBySom = []\n",
+    "for som in sommeliers:\n",
+    "  avgRatingBySom.append((som, np.mean(data[data['tasterName']==som]['points']))) \n",
+    "\n",
+    "print(\"The sommeliers have given the following average ratings %s\" % (avgRatingBySom))\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "_l0usG5zq7gF"
+   },
+   "source": [
+    "#### **T19) Who is the sommellier with the highest average rating and how many reviews has he/she written?**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {
+    "id": "GLaY3fMUpW-g"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The sommellier with the maximum average rating is Jeff Jenssen. He has reviewed 2 times.\n"
+     ]
+    }
+   ],
+   "source": [
+    "avgRatingBySomAr = np.array(avgRatingBySom, dtype=[('tasterName', \"U100\"), ('avgRating', 'f4')])\n",
+    "maxAvgRating = np.max(avgRatingBySomAr['avgRating'])\n",
+    "somIndexWithMaxAvgRating = np.argmax(avgRatingBySomAr['avgRating'])\n",
+    "somWithMaxAvgRating = avgRatingBySomAr[somIndexWithMaxAvgRating]['tasterName']\n",
+    "reviewsOfSomWithMaxRating = data[data['tasterName']==somWithMaxAvgRating]\n",
+    "\n",
+    "print(\"The sommellier with the maximum average rating is %s. He has reviewed %d times.\" % (somWithMaxAvgRating, len(reviewsOfSomWithMaxRating)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "jN4kBXdBG9vB"
+   },
+   "source": [
+    "#### **T20) Which US province has received the highest number of wine reviews?**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "id": "g-PRpYCDG68v"
+   },
+   "outputs": [],
+   "source": [
+    "usWines = data[data['country']=='US']\n",
+    "usProvicesUnique, count = np.unique(usWines['province'], return_counts=True)\n",
+    "usProvinceMaxReviews = np.max(count)\n",
+    "usProvinceMax = usProvicesUnique[np.argmax(count)]\n",
+    "\n",
+    "print(\"%s is the US province with %d reviewed wines.\" % (usProvinceMax, usProvinceMaxReviews))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "XeMozoICKw4v"
+   },
+   "source": [
+    "#### **T21) Who are the sommelliers with no rating above 90?**\n",
+    "\n",
+    "* Hint: You may want to look at https://jakevdp.github.io/PythonDataScienceHandbook/02.06-boolean-arrays-and-masks.html#Counting-entries"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {
+    "id": "XpQQuqZbJ804"
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['Alexander Peartree', 'Susan Kostrzewa'] are the sommelliers with no rating above 90\n"
+     ]
+    }
+   ],
+   "source": [
+    "sommeliers = np.unique(data['tasterName'])\n",
+    "avgRatingBySom = []\n",
+    "for i in sommeliers:\n",
+    "    if np.all(data[data['tasterName'] == i]['points'] < 90):\n",
+    "        avgRatingBySom.append(i)\n",
+    "print(\"%s are the sommelliers with no rating above 90\" % (avgRatingBySom))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "id": "pXHL1Hu9aSZd"
+   },
+   "source": [
+    "### Ideas for practicing further at home\n",
+    "\n",
+    "* Find the tasters (sommellier) who provided the most reviews and the highest\n",
+    "* Find which is the winery that received the highest number of independent reviews\n",
+    "* Find the average rating of each winery, and the wineries with the highest and lowest average ratings"
+   ]
+  }
+ ],
+ "metadata": {
+  "colab": {
+   "collapsed_sections": [],
+   "name": "DAT1-Practical3-Questions.ipynb",
+   "provenance": []
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}
